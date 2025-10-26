@@ -5,3 +5,7 @@ flask-cors
 requests
 sqlalchemy
 alembic
+twilio
+python-dotenv
+uagents
+aiohttp
