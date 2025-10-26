@@ -1,0 +1,7 @@
+pytest
+pytest-asyncio
+flask
+flask-cors
+requests
+sqlalchemy
+alembic
