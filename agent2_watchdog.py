@@ -18,6 +18,8 @@ class NavigationLog(Model):
 # Supabase Client
 class SupabaseClient:
     def __init__(self, url: str, key: str):
+        if not url or not key:
+            raise ValueError(f"Supabase credentials missing! URL: {url}, KEY: {'set' if key else 'missing'}")
         self.url = url.rstrip('/')
         self.key = key
         self.headers = {
@@ -58,7 +60,16 @@ agent = Agent(
     port=8002,
 )
 
-db = SupabaseClient(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+# Initialize database with error checking
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+if not SUPABASE_URL:
+    print("ERROR: SUPABASE_URL environment variable not set!")
+if not SUPABASE_KEY:
+    print("ERROR: SUPABASE_KEY environment variable not set!")
+
+db = SupabaseClient(SUPABASE_URL, SUPABASE_KEY)
 
 # Cache
 logs_cache: Dict[str, deque] = defaultdict(lambda: deque(maxlen=100))
