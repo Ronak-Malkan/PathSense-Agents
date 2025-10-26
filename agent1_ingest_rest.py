@@ -135,7 +135,14 @@ async def handle_rest_log(ctx: Context, req: NavigationLog) -> LogResponse:
 
         # Forward to Watchdog
         if WATCHDOG_ADDRESS:
-            await ctx.send(WATCHDOG_ADDRESS, req)
+            ctx.logger.info(f"Forwarding to WatchdogAgent: {WATCHDOG_ADDRESS}")
+            try:
+                await ctx.send(WATCHDOG_ADDRESS, req)
+                ctx.logger.info(f"✅ Message sent to WatchdogAgent")
+            except Exception as e:
+                ctx.logger.error(f"❌ Failed to send to WatchdogAgent: {e}")
+        else:
+            ctx.logger.warning("No WATCHDOG_ADDRESS configured - skipping forwarding")
 
         return LogResponse(success=True, message="Log processed")
     except Exception as e:
